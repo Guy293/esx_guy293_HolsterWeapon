@@ -40,13 +40,14 @@ end
 
 
  Citizen.CreateThread(function()
+	local ped = PlayerPedId()
+	loadAnimDict( "rcmjosh4" )
+	loadAnimDict( "weapons@pistol@" )
+	loadAnimDict( "reaction@intimidation@cop@unarmed" )
 	while true do
 		Citizen.Wait(0)
-		local ped = PlayerPedId()
-		if DoesEntityExist( ped ) and not IsEntityDead( ped ) and not IsPedInAnyVehicle(PlayerPedId(), true) and GetVehiclePedIsTryingToEnter(PlayerPedId()) == 0 then
-			loadAnimDict( "rcmjosh4" )
-			loadAnimDict( "weapons@pistol@" )
-			loadAnimDict( "reaction@intimidation@cop@unarmed" )
+		if not IsPedInAnyVehicle(ped, false) then
+		if DoesEntityExist( ped ) and not IsEntityDead( ped ) and GetVehiclePedIsTryingToEnter(ped) == 0 then
 			if CheckWeapon(ped) then
 			--if IsPedArmed(ped, 4) then
 				if holstered then
@@ -58,9 +59,9 @@ end
 					ClearPedTasks(ped)
 					holstered = false
 				else
-					blocked   = false
+					blocked = false
 				end
-			elseif not CheckWeapon(ped) then
+			else
 			--elseif not IsPedArmed(ped, 4) then
 				if not holstered then
 						TaskPlayAnim(ped, "weapons@pistol@", "aim_2_holster", 8.0, 2.0, -1, 48, 10, 0, 0, 0 )
@@ -71,6 +72,9 @@ end
 			end
 		else
 			SetCurrentPedWeapon(ped, GetHashKey("WEAPON_UNARMED"), true)
+		end
+		else
+			holstered = false
 		end
 	end
 end)
@@ -92,21 +96,21 @@ end)
 
 
 function CheckWeapon(ped)
-	if IsPedArmed(ped, 4) then
+	--[[if IsPedArmed(ped, 4) then
 		return true
+	end]]
+	for i = 1, #Config.Weapons do
+		if GetHashKey(Config.Weapons[i]) == GetSelectedPedWeapon(ped) then
+			return true
+		end
 	end
-	--for i = 1, #weapons do
-	--	if GetHashKey(weapons[i]) == GetSelectedPedWeapon(ped) then
-	--		return true
-	--	end
-	--end
 	return false
 end
 
 
-function loadAnimDict( dict )
-	while ( not HasAnimDictLoaded( dict ) ) do
-		RequestAnimDict( dict )
-		Citizen.Wait( 0 )
+function loadAnimDict(dict)
+	while ( not HasAnimDictLoaded(dict)) do
+		RequestAnimDict(dict)
+		Citizen.Wait(0)
 	end
 end

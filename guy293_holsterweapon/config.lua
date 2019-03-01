@@ -26,7 +26,7 @@ Config.cooldown		  = 3000
 
 
 
---[[
+
 -- Add/remove weapon hashes here to be added for holster checks.
 Config.Weapons = {
 	"WEAPON_PISTOL",
@@ -45,4 +45,3 @@ Config.Weapons = {
 	"WEAPON_STUNGUN",
 	"WEAPON_REVOLVER",
 }
-]]
