@@ -17,35 +17,36 @@ local blocked	 = false
 local PlayerData = {}
 local cooldown	 = Config.cooldown
 ------------------------
-if Config.UseESX then
-	Citizen.CreateThread(function()
+
+
+Citizen.CreateThread(function()
+	if Config.UseESX then
+		local ESX      	 = nil
+		while ESX == nil do
+			TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+			Citizen.Wait(0)
+		end
 		
-			local ESX      	 = nil
-			while ESX == nil do
-				TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-				Citizen.Wait(0)
-			end
-			
-			while ESX.GetPlayerData().job == nil do
-				Citizen.Wait(10)
-			end
-			
-			PlayerData = ESX.GetPlayerData()
-			
-			if PlayerData.job.name == 'police' then
-				cooldown = Config.CooldownPolice
-			end
-	end)
-end
+		while ESX.GetPlayerData().job == nil do
+			Citizen.Wait(10)
+		end
+		
+		PlayerData = ESX.GetPlayerData()
+		
+		if PlayerData.job.name == 'police' then
+			cooldown = Config.CooldownPolice
+		end
+	end
+end)
 
 
  Citizen.CreateThread(function()
-	local ped = PlayerPedId()
-	loadAnimDict( "rcmjosh4" )
-	loadAnimDict( "weapons@pistol@" )
-	loadAnimDict( "reaction@intimidation@cop@unarmed" )
 	while true do
 		Citizen.Wait(0)
+		loadAnimDict("rcmjosh4")
+		loadAnimDict("weapons@pistol@")
+		loadAnimDict("reaction@intimidation@cop@unarmed")
+		local ped = PlayerPedId()
 		if not IsPedInAnyVehicle(ped, false) then
 		if DoesEntityExist( ped ) and not IsEntityDead( ped ) and GetVehiclePedIsTryingToEnter(ped) == 0 then
 			if CheckWeapon(ped) then
