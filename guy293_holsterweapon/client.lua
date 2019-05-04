@@ -48,7 +48,7 @@ end)
 		loadAnimDict("reaction@intimidation@cop@unarmed")
 		local ped = PlayerPedId()
 		if not IsPedInAnyVehicle(ped, false) then
-		if DoesEntityExist( ped ) and not IsEntityDead( ped ) and GetVehiclePedIsTryingToEnter(ped) == 0 then
+		if DoesEntityExist( ped ) and not IsEntityDead( ped ) and GetVehiclePedIsTryingToEnter(ped) == 0 and not IsPedInParachuteFreeFall (ped) then
 			if CheckWeapon(ped) then
 			--if IsPedArmed(ped, 4) then
 				if holstered then
