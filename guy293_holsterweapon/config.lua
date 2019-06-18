@@ -3,29 +3,12 @@
 -- Made By: Guy293
 -- GitHub: https://github.com/Guy293
 -- Fivem Forum: https://forum.fivem.net/u/guy293/
+-- Tweaked by Campinchris (Added ESX only Diff animation for Police and Non Police)
 ----------------------------------------------------------------
 
-
-
-
-
-
-
 Config 				  = {}
-Config.UseESX 		  = true
-Config.CooldownPolice = 1000 -- Will work with ESX only
-Config.cooldown		  = 3000
-
-
-
-
-
-
-
-
-
-
-
+Config.CooldownPolice = 700
+Config.cooldown		  = 1700
 
 -- Add/remove weapon hashes here to be added for holster checks.
 Config.Weapons = {
