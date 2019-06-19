@@ -7,6 +7,7 @@
 ----------------------------------------------------------------
 
 Config 				  = {}
+Config.UseESX		  = true
 Config.CooldownPolice = 700
 Config.cooldown		  = 1700
 

@@ -6,6 +6,6 @@
 ----------------------------------------------------------------
 
 client_script {
-	"config.lua",
-	"client.lua"
+    "config.lua",
+    "client.lua"
 }

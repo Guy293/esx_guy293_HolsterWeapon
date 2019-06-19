@@ -7,32 +7,38 @@
 ----------------------------------------------------------------
 
 --- DO NOT EDIT THIS --
-local ESX      	 = nil
 local holstered  = true
 local blocked	 = false
 local PlayerData = {}
 ------------------------
 
 Citizen.CreateThread(function()
-	while ESX == nil do
-		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-		Citizen.Wait(0)
-	end
-	
-	while ESX.GetPlayerData().job == nil do
-		Citizen.Wait(10)
-	end
+	if Config.UseESX then
+		local ESX      	 = nil
+			while ESX == nil do
+			TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+			Citizen.Wait(0)
+		end
 
-	PlayerData = ESX.GetPlayerData()
+		while ESX.GetPlayerData().job == nil do
+			Citizen.Wait(10)
+		end
+
+		PlayerData = ESX.GetPlayerData()
+
+		if PlayerData.job.name == 'police' then
+			cooldown = Config.CooldownPolice
+		end
+
+		RegisterNetEvent('esx:setJob')
+			AddEventHandler('esx:setJob', function(job)
+  				PlayerData.job = job
+		end)
+	end
 end)
 
-RegisterNetEvent('esx:setJob')
-	AddEventHandler('esx:setJob', function(job)
-  		PlayerData.job = job
-	end)
-
- Citizen.CreateThread(function()
-	while true do
+Citizen.CreateThread(function()
+	while Config.UseESX do
 		Citizen.Wait(0)
 		loadAnimDict("rcmjosh4")
 		loadAnimDict("reaction@intimidation@cop@unarmed")
@@ -59,7 +65,6 @@ RegisterNetEvent('esx:setJob')
 					else
 					--elseif not IsPedArmed(ped, 4) then
 						if not holstered then
-					
 								TaskPlayAnim(ped, "rcmjosh4", "josh_leadout_cop2", 8.0, 2.0, -1, 48, 10, 0, 0, 0 )
 									Citizen.Wait(500)
 								TaskPlayAnim(ped, "reaction@intimidation@cop@unarmed", "outro", 8.0, 2.0, -1, 50, 2.0, 0, 0, 0 ) -- Change 50 to 30 if you want to stand still when holstering weapon
@@ -110,6 +115,52 @@ RegisterNetEvent('esx:setJob')
 	end
 end)
 
+
+Citizen.CreateThread(function()
+	while Config.UseESX do
+		Citizen.Wait(0)
+		loadAnimDict("rcmjosh4")
+		loadAnimDict("reaction@intimidation@cop@unarmed")
+		local ped = PlayerPedId()
+
+			if not IsPedInAnyVehicle(ped, false) then
+				if GetVehiclePedIsTryingToEnter (ped) == 0 and not IsPedInParachuteFreeFall (ped) then
+					if CheckWeapon(ped) then
+						--if IsPedArmed(ped, 4) then
+						if holstered then
+							blocked   = true
+								TaskPlayAnim(ped, "reaction@intimidation@cop@unarmed", "intro", 8.0, 2.0, -1, 50, 2.0, 0, 0, 0 ) -- Change 50 to 30 if you want to stand still when removing weapon
+								--TaskPlayAnim(ped, "reaction@intimidation@cop@unarmed", "intro", 8.0, 2.0, -1, 30, 2.0, 0, 0, 0 ) Use this line if you want to stand still when removing weapon
+									Citizen.Wait(Config.CooldownPolice)
+								TaskPlayAnim(ped, "rcmjosh4", "josh_leadout_cop2", 8.0, 2.0, -1, 48, 10, 0, 0, 0 )
+									Citizen.Wait(400)
+								ClearPedTasks(ped)
+							holstered = false
+						else
+							blocked = false
+						end
+					else
+					--elseif not IsPedArmed(ped, 4) then
+						if not holstered then
+								TaskPlayAnim(ped, "rcmjosh4", "josh_leadout_cop2", 8.0, 2.0, -1, 48, 10, 0, 0, 0 )
+									Citizen.Wait(500)
+								TaskPlayAnim(ped, "reaction@intimidation@cop@unarmed", "outro", 8.0, 2.0, -1, 50, 2.0, 0, 0, 0 ) -- Change 50 to 30 if you want to stand still when holstering weapon
+								--TaskPlayAnim(ped, "reaction@intimidation@cop@unarmed", "outro", 8.0, 2.0, -1, 30, 2.0, 0, 0, 0 ) Use this line if you want to stand still when holstering weapon
+									Citizen.Wait(60)
+								ClearPedTasks(ped)
+							holstered = true
+						end
+					end
+				else
+					SetCurrentPedWeapon(ped, GetHashKey("WEAPON_UNARMED"), true)
+				end
+			else
+				holstered = true
+			end
+		end
+	end
+end)
+
 Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
@@ -125,7 +176,6 @@ Citizen.CreateThread(function()
 		end
 	end
 end)
-
 
 function CheckWeapon(ped)
 	--[[if IsPedArmed(ped, 4) then
@@ -143,7 +193,6 @@ function CheckWeapon(ped)
 		return false
 	end
 end
-
 
 function loadAnimDict(dict)
 	while ( not HasAnimDictLoaded(dict)) do
