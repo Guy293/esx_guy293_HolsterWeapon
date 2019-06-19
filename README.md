@@ -23,4 +23,8 @@ If you do not have ESX simply apply the following in the config:
 ```lua
 Config.UseESX = false
 ```
+Move Contents into resources folder and add the following to Server.cfg
+```
+start guy293_holsterweapon
+```
 Please Do Not Change the name of the Resource. Thank You.
