@@ -16,7 +16,7 @@ Config.UseESX = True
 ```
 Police Pull from Side Holster and Civillians will Pull from back as shown below:
 
-![Image of Notification](https://forum.fivem.net/uploads/default/original/3X/4/3/4382031054598db884f5402edd7e9bfa5df98af1.jpeg)
+![Image of Hoster](https://forum.fivem.net/uploads/default/original/3X/4/3/4382031054598db884f5402edd7e9bfa5df98af1.jpeg)
 
 ESX Dependencies;
 * esx_policejob
