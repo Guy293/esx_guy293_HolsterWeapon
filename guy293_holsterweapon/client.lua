@@ -3,7 +3,6 @@
 -- Made By: Guy293
 -- GitHub: https://github.com/Guy293
 -- Fivem Forum: https://forum.fivem.net/u/guy293/
--- Tweaked by: Campinchris
 ----------------------------------------------------------------
 
 --- DO NOT EDIT THIS --
@@ -11,6 +10,8 @@ local ESX      	 = nil
 local holstered  = true
 local blocked	 = false
 local PlayerData = {}
+local cooldown	 = Config.cooldown
+local cooldownpd = Config.CooldownPolice
 ------------------------
 
 Citizen.CreateThread(function()
@@ -40,19 +41,19 @@ RegisterNetEvent('esx:setJob')
 	while true do
 		Citizen.Wait(0)
 		loadAnimDict("rcmjosh4")
+		loadAnimDict("weapons@pistol@")
 		loadAnimDict("reaction@intimidation@cop@unarmed")
 		loadAnimDict("reaction@intimidation@1h")
 		local ped = PlayerPedId()
 		if PlayerData.job ~= nil and PlayerData.job.name == 'police' then
 			if not IsPedInAnyVehicle(ped, false) then
-				if DoesEntityExist( ped ) and not IsEntityDead( ped ) and GetVehiclePedIsTryingToEnter (ped) == 0 and not IsPedInParachuteFreeFall (ped) then
+				if GetVehiclePedIsTryingToEnter (ped) == 0 and not IsPedInParachuteFreeFall (ped) then
 					if CheckWeapon(ped) then
 						--if IsPedArmed(ped, 4) then
 						if holstered then
-							blocked   = true
-							TaskPlayAnim(ped, "reaction@intimidation@cop@unarmed", "intro", 8.0, 2.0, -1, 50, 2.0, 0, 0, 0 ) -- Change 50 to 30 if you want to stand still when removing weapon
-						--	TaskPlayAnim(ped, "reaction@intimidation@cop@unarmed", "intro", 8.0, 2.0, -1, 30, 2.0, 0, 0, 0 ) Use this line if you want to stand still when removing weapon
-							Citizen.Wait(Config.CooldownPolice)
+							blocked = true
+							TaskPlayAnim(ped, "reaction@intimidation@cop@unarmed", "intro", 8.0, 2.0, -1, 50, 2.0, 0, 0, 0 )
+							Citizen.Wait(cooldownpd)
 							TaskPlayAnim(ped, "rcmjosh4", "josh_leadout_cop2", 8.0, 2.0, -1, 48, 10, 0, 0, 0 )
 							Citizen.Wait(400)
 							ClearPedTasks(ped)
@@ -63,12 +64,10 @@ RegisterNetEvent('esx:setJob')
 					else
 					--elseif not IsPedArmed(ped, 4) then
 						if not holstered then
-					
 							TaskPlayAnim(ped, "rcmjosh4", "josh_leadout_cop2", 8.0, 2.0, -1, 48, 10, 0, 0, 0 )
 							Citizen.Wait(500)
-							TaskPlayAnim(ped, "reaction@intimidation@cop@unarmed", "outro", 8.0, 2.0, -1, 50, 2.0, 0, 0, 0 ) -- Change 50 to 30 if you want to stand still when holstering weapon
-						--	TaskPlayAnim(ped, "reaction@intimidation@cop@unarmed", "outro", 8.0, 2.0, -1, 30, 2.0, 0, 0, 0 ) Use this line if you want to stand still when holstering weapon
-							Citizen.Wait(60)
+							TaskPlayAnim(ped, "reaction@intimidation@cop@unarmed", "outro", 8.0, 2.0, -1, 50, 2.0, 0, 0, 0 )
+							Citizen.Wait(50)
 							ClearPedTasks(ped)
 							holstered = true
 						end
@@ -81,14 +80,13 @@ RegisterNetEvent('esx:setJob')
 			end
 		else
 			if not IsPedInAnyVehicle(ped, false) then
-				if DoesEntityExist( ped ) and not IsEntityDead( ped ) and GetVehiclePedIsTryingToEnter (ped) == 0 and not IsPedInParachuteFreeFall (ped) then
+				if GetVehiclePedIsTryingToEnter (ped) == 0 and not IsPedInParachuteFreeFall (ped) then
 					if CheckWeapon(ped) then
 						--if IsPedArmed(ped, 4) then
 						if holstered then
-							blocked   = true
+							blocked = true
 							TaskPlayAnim(ped, "reaction@intimidation@1h", "intro", 5.0, 1.0, -1, 50, 0, 0, 0, 0 )
-						--	TaskPlayAnim(ped, "reaction@intimidation@1h", "intro", 5.0, 1.0, -1, 30, 0, 0, 0, 0 ) Use this line if you want to stand still when removing weapon
-							Citizen.Wait(Config.cooldown)
+							Citizen.Wait(cooldown)
 							ClearPedTasks(ped)
 							holstered = false
 						else
@@ -97,8 +95,7 @@ RegisterNetEvent('esx:setJob')
 					else
 					--elseif not IsPedArmed(ped, 4) then
 						if not holstered then
-							TaskPlayAnim(ped, "reaction@intimidation@1h", "outro", 8.0, 3.0, -1, 50, 0, 0, 0.125, 0 ) -- Change 50 to 30 if you want to stand still when holstering weapon
-						--	TaskPlayAnim(ped, "reaction@intimidation@1h", "outro", 8.0, 3.0, -1, 30, 0, 0, 0.125, 0 ) Use this line if you want to stand still when holstering weapon
+							TaskPlayAnim(ped, "reaction@intimidation@1h", "outro", 8.0, 3.0, -1, 50, 0, 0, 0.125, 0 )
 							Citizen.Wait(1700)
 							ClearPedTasks(ped)
 							holstered = true
@@ -134,12 +131,17 @@ function CheckWeapon(ped)
 	--[[if IsPedArmed(ped, 4) then
 		return true
 	end]]
+	if IsEntityDead(ped) then
+		blocked = false
+		return false
+	else
 	for i = 1, #Config.Weapons do
 		if GetHashKey(Config.Weapons[i]) == GetSelectedPedWeapon(ped) then
 			return true
 		end
 	end
 	return false
+end
 end
 
 
