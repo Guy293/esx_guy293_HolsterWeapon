@@ -1,6 +1,6 @@
 # esx_guy293_HolsterWeapon
-Fivem ESX Script for weapon holster
+Fivem ESX & Non ESX Script for weapon holster
 
-Tweaked for ESX only
+Tweaked for ESX and Non ESX
 
-Dependency: esx_policejob
+ESX Dependency: job == police
