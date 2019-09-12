@@ -3,7 +3,7 @@
 -- Made By: Guy293
 -- GitHub: https://github.com/Guy293
 -- Fivem Forum: https://forum.fivem.net/u/guy293/
--- Tweaked by: Campinchris
+-- Tweaked by: Campinchris & Jougito
 ----------------------------------------------------------------
 
 --- DO NOT EDIT THIS --
@@ -20,7 +20,7 @@ Citizen.CreateThread(function()
 		local ped = PlayerPedId()
 
 		if not IsPedInAnyVehicle(ped, false) then
-			if GetVehiclePedIsTryingToEnter (ped) == 0 and not IsPedInParachuteFreeFall (ped) then
+			if GetVehiclePedIsTryingToEnter (ped) == 0 and (GetPedParachuteState(ped) == -1 or GetPedParachuteState(ped) == 0) and not IsPedInParachuteFreeFall(ped) then
 				if CheckWeapon(ped) then
 					--if IsPedArmed(ped, 4) then
 					if holstered then
@@ -64,7 +64,7 @@ Citizen.CreateThread(function()
 		local ped = PlayerPedId()
 
 		if not IsPedInAnyVehicle(ped, false) then
-			if GetVehiclePedIsTryingToEnter (ped) == 0 and not IsPedInParachuteFreeFall (ped) then
+			if GetVehiclePedIsTryingToEnter (ped) == 0 and (GetPedParachuteState(ped) == -1 or GetPedParachuteState(ped) == 0) and not IsPedInParachuteFreeFall(ped) then
 				if CheckWeapon(ped) then
 					--if IsPedArmed(ped, 4) then
 					if holstered then
