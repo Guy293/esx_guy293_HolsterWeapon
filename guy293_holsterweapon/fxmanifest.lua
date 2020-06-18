@@ -5,7 +5,10 @@
 -- Fivem Forum: https://forum.fivem.net/u/guy293/
 ----------------------------------------------------------------
 
-client_script {
-    "config.lua",
-    "client.lua"
+fx_version 'bodacious'
+game 'gta5'
+
+client_scripts {
+	'config.lua',
+	'client.lua'
 }
