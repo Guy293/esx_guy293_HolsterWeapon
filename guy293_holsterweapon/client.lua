@@ -12,9 +12,9 @@ local blocked	 = false
 local PlayerData = {}
 ------------------------
 
-Citizen.CreateThread(function()
+CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		Wait(0)
 		loadAnimDict("rcmjosh4")
 		loadAnimDict("reaction@intimidation@cop@unarmed")
 		local ped = PlayerPedId()
@@ -25,13 +25,14 @@ Citizen.CreateThread(function()
 					--if IsPedArmed(ped, 4) then
 					if holstered then
 						blocked   = true
+							blockloop()
 							SetPedCurrentWeaponVisible(ped, 0, 1, 1, 1)
 							TaskPlayAnim(ped, "reaction@intimidation@cop@unarmed", "intro", 8.0, 2.0, -1, 50, 2.0, 0, 0, 0 ) -- Change 50 to 30 if you want to stand still when removing weapon
 							--TaskPlayAnim(ped, "reaction@intimidation@cop@unarmed", "intro", 8.0, 2.0, -1, 30, 2.0, 0, 0, 0 ) Use this line if you want to stand still when removing weapon
-								Citizen.Wait(Config.cooldown)
+								Wait(Config.cooldown)
 								SetPedCurrentWeaponVisible(ped, 1, 1, 1, 1)
 							TaskPlayAnim(ped, "rcmjosh4", "josh_leadout_cop2", 8.0, 2.0, -1, 48, 10, 0, 0, 0 )
-								Citizen.Wait(400)
+								Wait(400)
 							ClearPedTasks(ped)
 						holstered = false
 					else
@@ -41,10 +42,10 @@ Citizen.CreateThread(function()
 				--elseif not IsPedArmed(ped, 4) then
 					if not holstered then
 							TaskPlayAnim(ped, "rcmjosh4", "josh_leadout_cop2", 8.0, 2.0, -1, 48, 10, 0, 0, 0 )
-								Citizen.Wait(500)
+								Wait(500)
 							TaskPlayAnim(ped, "reaction@intimidation@cop@unarmed", "outro", 8.0, 2.0, -1, 50, 2.0, 0, 0, 0 ) -- Change 50 to 30 if you want to stand still when holstering weapon
 							--TaskPlayAnim(ped, "reaction@intimidation@cop@unarmed", "outro", 8.0, 2.0, -1, 30, 2.0, 0, 0, 0 ) Use this line if you want to stand still when holstering weapon
-								Citizen.Wait(60)
+								Wait(60)
 							ClearPedTasks(ped)
 						holstered = true
 					end
@@ -101,9 +102,9 @@ Citizen.CreateThread(function()
 	end
 end)]]
 
-Citizen.CreateThread(function()
+function blockloop()
 	while true do
-		Citizen.Wait(0)
+		Wait(0)
 
 		if blocked then
 			DisableControlAction(1, 25, true )
@@ -113,9 +114,11 @@ Citizen.CreateThread(function()
 			DisableControlAction(1, 23, true)
 			DisableControlAction(1, 37, true) -- Disables INPUT_SELECT_WEAPON (TAB)
 			DisablePlayerFiring(ped, true) -- Disable weapon firing
+		else
+			break
 		end
 	end
-end)
+end
 
 function CheckWeapon(ped)
 	--[[if IsPedArmed(ped, 4) then
@@ -137,6 +140,6 @@ end
 function loadAnimDict(dict)
 	while ( not HasAnimDictLoaded(dict)) do
 		RequestAnimDict(dict)
-		Citizen.Wait(0)
+		Wait(0)
 	end
 end
